@@ -1,0 +1,49 @@
+body {
+  padding: 3px;
+  font-family: Helvetica;
+}
+
+header {
+  height: 150px;
+  background-image: url("./assets/images/pattern.jpeg");
+}
+
+header h1 {
+  text-align: center;
+  font-family: Helvetica;
+  font-size: 100px;
+  font-weight: bold;
+  color: khaki;
+}
+
+.brushes h2 {
+  font-family: Helvetica;
+  font-size: 32px;
+  font-weight: bold;
+  color: white;
+  background-color: mediumspringgreen;
+}
+.frames h2 {
+  font-family: Helvetica;
+  font-size: 32px;
+  font-weight: bold;
+  color: white;
+  background-color: lightcoral;
+}
+.paint h2 {
+  font-family: Helvetica;
+  font-size: 32px;
+  font-weight: bold;
+  color: white;
+  background-color: skyblue;
+}
+
+.store-section h4 {
+  font-weight: bold;
+}
+
+span.price {
+  font-family: Helvetica;
+  font-weight: bold;
+  color: blue;
+}
