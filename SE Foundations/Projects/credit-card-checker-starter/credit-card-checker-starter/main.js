@@ -38,15 +38,15 @@ const batch = [
   mystery5,
 ];
 
-// Add your functions below:
-function validateCred(array) {
+function getSum(array) {
   const farthestDigit = array[array.length - 1];
   let sum = farthestDigit;
   let doublerFlag = 2;
   for (let i = array.length - 2; i >= 0; i--) {
+    //doublerFlag will help with skipping to double the value of every second digit beginning from the right most digit after the checksum or farthest digit
     if (doublerFlag % 2 === 0) {
       let doubledNumber = array[i] * 2;
-      doubledNumber = doubledNumber > 9 ? doubledNumber - 9 : doubledNumber;
+      if (doubledNumber > 9) doubledNumber -= 9;
       doublerFlag--;
       sum += doubledNumber;
     } else {
@@ -54,24 +54,26 @@ function validateCred(array) {
       doublerFlag = 2;
     }
   }
+  return sum;
+}
+
+// Add your functions below:
+function validateCred(array) {
+  let sum = getSum(array);
   if (sum % 10 === 0) return true;
   return false;
 }
 
-console.log(validateCred(valid5));
-
 function findInvalidCards(cards) {
   let invalidCards = [];
   cards.forEach((cardArray) => {
-    if (validateCred(cardArray)) {
+    if (!validateCred(cardArray)) {
       invalidCards.push(cardArray);
     }
   });
 
   return invalidCards;
 }
-
-console.log(findInvalidCards(batch));
 
 function idInvalidCardCompanies(invalidCard) {
   let companies = [];
@@ -88,4 +90,47 @@ function idInvalidCardCompanies(invalidCard) {
   });
   return companies;
 }
-console.log(idInvalidCardCompanies(findInvalidCards(batch)));
+
+function makeInvalidCardValid(invalidCard) {
+  let cardToBeValid = invalidCard.slice(0, invalidCard.length - 1);
+  const checkDigit = calculateCheckDigit(cardToBeValid);
+  cardToBeValid.push(checkDigit);
+  return cardToBeValid;
+}
+
+function calculateCheckDigit(cardDigits) {
+  let digitsToTest = [...cardDigits];
+  let sum = 0;
+  //doublerFlag will help with skipping to double the value of every second digit beginning from the right most digit after removing the false checksum
+  let doublerFlag = 2;
+  for (let i = digitsToTest.length - 1; i >= 0; i--) {
+    if (doublerFlag % 2 == 0) {
+      digitsToTest[i] *= 2;
+      if (digitsToTest[i] > 9) {
+        digitsToTest[i] -= 9;
+      }
+      doublerFlag--;
+    } else {
+      doublerFlag = 2;
+    }
+    // If doubling results in a number greater than 9, subtract 9
+    sum += digitsToTest[i];
+  }
+  // Calculate the check digit as the number needed to reach a multiple of 10
+  const checkDigit = (10 - (sum % 10)) % 10;
+
+  return checkDigit;
+}
+
+function makeInvalidCardsValid(invalidCards) {
+  let validCards = [];
+  invalidCards.forEach((card) => {
+    validCards.push(makeInvalidCardValid(card));
+  });
+  return validCards;
+}
+let invalidCards = findInvalidCards(batch);
+
+const validCards = makeInvalidCardsValid(invalidCards);
+
+validCards.forEach((card) => console.log(validateCred(card)));
