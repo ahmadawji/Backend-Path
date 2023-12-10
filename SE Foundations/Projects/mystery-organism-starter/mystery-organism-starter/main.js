@@ -52,6 +52,7 @@ function pAequorFactory(specimenNum = 0, DNA = []) {
       console.log(
         `specimen #${this._specimenNum} and specimen #${pAequor.specimenNum} have ${DNAInCommon}% DNA in common.`
       );
+      return DNAInCommon;
     },
     willLikelySurvive() {
       let numOFCOrG = 0;
@@ -65,6 +66,15 @@ function pAequorFactory(specimenNum = 0, DNA = []) {
       percentageSurvival = Math.round((numOFCOrG / this._DNA.length) * 100);
       if (percentageSurvival >= 60) return true;
       return false;
+    },
+    complementStrand() {
+      const matcherObject = {
+        A: "T",
+        T: "A",
+        C: "G",
+        G: "C",
+      };
+      return this._DNA.map((base) => matcherObject[base]);
     },
   };
 }
@@ -83,14 +93,39 @@ function createSurvivalPAequors() {
   while (survivalPAequors.length < 30) {
     const pAequor = pAequorFactory(survivalPAequors.length + 1, mockUpStrand());
     if (pAequor.willLikelySurvive()) {
-      console.log(
-        `pAequor: ${pAequor.specimenNum} - ${
-          pAequor.DNA
-        } | Survival: ${pAequor.willLikelySurvive()}`
-      );
       survivalPAequors.push(pAequor);
     }
   }
   return survivalPAequors;
 }
-createSurvivalPAequors();
+// createSurvivalPAequors();
+
+function mostRelatedInstances(pAequors) {
+  const mostRelatedPairs = [];
+  for (let i = 0; i < pAequors.length; i++) {
+    let max = 0;
+    for (let j = 0; j < pAequors.length; j++) {
+      let dnaComparison = 0;
+      if (j !== i) {
+        dnaComparison = pAequors[i].compareDNA(pAequors[j]);
+        if (dnaComparison > max) {
+          max = dnaComparison;
+          const mostRelatedPair = {
+            PA1: pAequors[i].specimenNum,
+            PA2: pAequors[j].specimenNum,
+            max,
+          };
+          mostRelatedPairs[i] = mostRelatedPair;
+        }
+      }
+    }
+  }
+
+  const mostRelatedPair = mostRelatedPairs.reduce((acc, curr) => {
+    return acc.max > curr.max ? acc : curr;
+  });
+
+  console.log("The two PAequors that are most in common: ");
+  console.log(mostRelatedPair);
+}
+mostRelatedInstances(createSurvivalPAequors());
