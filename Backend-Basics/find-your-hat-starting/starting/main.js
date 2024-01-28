@@ -75,7 +75,10 @@ class Field {
   }
 
   print() {
-    console.table(this._field);
+    this._field.forEach((space) => {
+      console.log(space.join(""));
+    });
+    //console.table(this._field);
   }
 }
 
