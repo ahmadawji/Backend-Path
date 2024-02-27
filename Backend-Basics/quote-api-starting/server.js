@@ -24,6 +24,17 @@ app.get("/api/quotes/random", (req, res, next) => {
   res.send({ quote: getRandomElement(quotes) });
 });
 
+app.post("/api/quotes", (req, res, next) => {
+  const { quote, person } = req.query;
+  if (quote && person) {
+    const newQuote = { quote, person };
+    quotes.push(newQuote);
+    res.send({ quote: newQuote });
+  } else {
+    res.status(400).send();
+  }
+});
+
 app.listen(PORT, () => {
   //The second argument is a callback function that will be called once the server is running and ready to receive responses.
   console.log(`Server is listening on port ${PORT}`);
