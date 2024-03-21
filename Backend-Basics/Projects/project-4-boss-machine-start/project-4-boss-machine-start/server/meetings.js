@@ -4,6 +4,7 @@ const {
   createMeeting,
   getAllFromDatabase,
   deleteAllFromDatabase,
+  addToDatabase,
 } = require("./db.js");
 
 meetings.get("/", (req, res, next) => {
@@ -13,11 +14,12 @@ meetings.get("/", (req, res, next) => {
 
 meetings.post("/", (req, res, next) => {
   const meetingCreated = createMeeting();
-  res.send(meetingCreated);
+  const addedMeetingToDB = addToDatabase("meetings", meetingCreated);
+  res.status(201).send(addedMeetingToDB);
 });
 
 meetings.delete("/", (req, res, next) => {
   const deletedMeeetings = deleteAllFromDatabase("meetings");
-  res.send(deletedMeeetings);
+  res.status(204).send(deletedMeeetings);
 });
 module.exports = meetings;

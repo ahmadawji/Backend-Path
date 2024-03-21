@@ -40,7 +40,7 @@ minions.get("/:minionId", (req, res, next) => {
 
 minions.post("/", (req, res, next) => {
   const minionAdded = addToDatabase("minions", req.body);
-  res.send(minionAdded);
+  res.status(201).send(minionAdded);
 });
 
 minions.put("/:minionId", (req, res, next) => {
@@ -50,7 +50,7 @@ minions.put("/:minionId", (req, res, next) => {
 
 minions.delete("/:minionId", (req, res, next) => {
   const deletedMinion = deleteFromDatabasebyId("minions", req.minionId);
-  res.send(deletedMinion);
+  res.status(204).send(deletedMinion);
 });
 
 module.exports = minions;

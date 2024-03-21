@@ -33,7 +33,7 @@ ideas.get("/:ideasId", (req, res, next) => {
 
 ideas.post("/", (req, res, next) => {
   const ideaAdded = addToDatabase("ideas", req.body);
-  res.send(ideaAdded);
+  res.status(201).send(ideaAdded);
 });
 
 ideas.put("/:ideasId", (req, res, next) => {
@@ -43,6 +43,6 @@ ideas.put("/:ideasId", (req, res, next) => {
 
 ideas.delete("/:ideasId", (req, res, next) => {
   const deletedIdea = deleteFromDatabasebyId("ideas", req.ideaId);
-  res.send(deletedIdea);
+  res.status(204).send(deletedIdea);
 });
 module.exports = ideas;
