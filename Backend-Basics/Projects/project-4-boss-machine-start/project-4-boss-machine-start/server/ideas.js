@@ -1,14 +1,14 @@
 const express = require("express");
 const ideas = express.Router();
 const {
-  createidea,
   getAllFromDatabase,
   getFromDatabaseById,
   addToDatabase,
   updateInstanceInDatabase,
   deleteFromDatabasebyId,
-  deleteAllFromDatabase,
 } = require("./db.js");
+
+const checkMillionDollarIdea = require("./checkMillionDollarIdea.js");
 
 ideas.param("ideasId", (req, res, next, ideasId) => {
   // Perform some validation or data retrieval based on the userId
@@ -31,12 +31,12 @@ ideas.get("/:ideasId", (req, res, next) => {
   res.send(idea);
 });
 
-ideas.post("/", (req, res, next) => {
+ideas.post("/", checkMillionDollarIdea, (req, res, next) => {
   const ideaAdded = addToDatabase("ideas", req.body);
   res.status(201).send(ideaAdded);
 });
 
-ideas.put("/:ideasId", (req, res, next) => {
+ideas.put("/:ideasId", checkMillionDollarIdea, (req, res, next) => {
   const ideaUpdated = updateInstanceInDatabase("ideas", req.body);
   res.send(ideaUpdated);
 });
