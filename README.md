@@ -17,27 +17,15 @@ Make sure you have the following software installed on your machine:
 ### Installation
 
 1.  Clone the repository to your local machine:
-    
-    bashCopy code
-    
     `git clone git@github.com:ahmadawji/personal-budget-1.git` 
     
 2.  Navigate to the project directory:
-    
-    bashCopy code
-    
     `cd personal-budget-1` 
     
 3.  Install dependencies:
-    
-    bashCopy code
-    
     `npm install` 
     
 4.  Start the server:
-    
-    bashCopy code
-    
     `npm start` 
     
 
