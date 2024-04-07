@@ -5,12 +5,16 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js --exec babel-node --presets babel-preset-env"
+    "start": "nodemon app.js --exec babel-node --presets babel-preset-env",
+    "transpile": "babel ./server --out-dir dist-server"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.19.2"
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "rimraf": "^5.0.5"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
