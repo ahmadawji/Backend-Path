@@ -47,8 +47,8 @@ class Envelope {
     }
   }
 
-  toString() {
-    return `{category: ${this.#category}, budget: ${this.#budget}}`;
+  envelopeObject() {
+    return { id: this.#ID, category: this.#category, budget: this.#budget };
   }
 }
 
