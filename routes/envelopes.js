@@ -34,16 +34,23 @@ const validateEnvelopeBody = (req, res, next) => {
     categoryIndex != -1 &&
     budgetIndex != -1 &&
     typeof envelopeBody.category === "string" &&
-    typeof envelopeBody.budget === "number"
+    typeof envelopeBody.budget === "number" &&
+    envelopeBody.budget > 0
   ) {
     req.body = envelopeBody;
     next();
   } else {
-    res
-      .status(400)
-      .send(
-        `Make sure you have provided a good request body. Request body should be similary to {"category": string, "budget": number}`
-      );
+    res.status(400).json({
+      error: {
+        message: "Invalid Request Body",
+        details:
+          "Please provide 'category' and 'budget' fields in the request body.",
+        example: {
+          category: "string",
+          budget: "number (greater than 0)",
+        },
+      },
+    });
   }
 };
 
@@ -71,8 +78,12 @@ envelopes.post("/", validateEnvelopeBody, (req, res, next) => {
 });
 
 envelopes.put("/:envelopeId", validateEnvelopeBody, (req, res, next) => {
-  const envelopeUpdated = updateInstanceInDatabase("envelopes", req.body);
-  res.send(envelopeUpdated);
+  const envelopeReqBody = req.body;
+  const envelopeUpdated =
+    envelopesDB[envelopesDB.findIndex((env) => env.ID === req.envelopeId)];
+  envelopeUpdated.category = envelopeReqBody.category;
+  envelopeUpdated.budget = envelopeReqBody.budget;
+  res.send(envelopeUpdated.envelopeObject());
 });
 
 envelopes.delete("/:envelopeId", (req, res, next) => {
