@@ -87,8 +87,14 @@ envelopes.put("/:envelopeId", validateEnvelopeBody, (req, res, next) => {
 });
 
 envelopes.delete("/:envelopeId", (req, res, next) => {
-  const deletedenvelope = deleteFromDatabasebyId("envelopes", req.envelopeId);
-  res.status(204).send(deletedenvelope);
+  const envelopeIndex = envelopesDB.findIndex(
+    (env) => env.ID === req.envelopeId
+  );
+  const deletedEnvelope = envelopesDB[envelopeIndex];
+
+  envelopesDB.splice(envelopeIndex, 1);
+
+  res.status(200).send(deletedEnvelope.envelopeObject());
 });
 
 module.exports = envelopes;
