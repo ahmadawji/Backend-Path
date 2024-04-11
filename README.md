@@ -34,22 +34,22 @@ Make sure you have the following software installed on your machine:
 Once the server is running locally, you can use tools like Postman or curl to interact with the API endpoints.
 
 -   Create a new budget envelope:
-    `POST /envelopes` 
+    `POST /api/envelopes` 
     
 -   Get a list of all budget envelopes:
-    `GET /envelopes` 
+    `GET /api/envelopes` 
     
 -   Get details of a specific budget envelope:
-    `GET /envelopes/:id` 
+    `GET /api/envelopes/:id` 
     
 -   Update a budget envelope:
-    `PUT /envelopes/:id` 
+    `PUT /api/envelopes/:id` 
     
 -   Delete a budget envelope:
-    `DELETE /envelopes/:id`
+    `DELETE /api/envelopes/:id`
 
 -   Transfer budget value from one envelope to another:
-    `PUT /envelopes/transfer/:firstEnvelopeId&:secondEnvelopeId` 
+    `PUT /api/envelopes/transfer/:firstEnvelopeId&:secondEnvelopeId` 
 
 ### Contributing
 
