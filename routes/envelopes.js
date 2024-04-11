@@ -8,13 +8,16 @@ envelopesData.forEach((envelope, index) => {
   envelopesDB.push(new Envelope(index + 1, envelope.category, envelope.budget));
 });
 
-envelopes.param("envelopeId", (req, res, next, envelopeId) => {
-  // Perform some validation or data retrieval based on the userId
+const checkEnvelopeIfFound = (ID) => {
   const envelopeFound = envelopesDB.find((envelope) => {
-    return envelope.ID === +envelopeId;
+    return envelope.ID === +ID;
   });
+  if (envelopeFound) return true;
+  return false;
+};
 
-  if (envelopeFound) {
+envelopes.param("envelopeId", (req, res, next, envelopeId) => {
+  if (checkEnvelopeIfFound(envelopeId)) {
     // If valid, attach the userId to the request object for later use
     req.envelopeId = +envelopeId;
     next(); // Continue to the next middleware or route handler
@@ -35,7 +38,7 @@ const validateEnvelopeBody = (req, res, next) => {
     budgetIndex != -1 &&
     typeof envelopeBody.category === "string" &&
     typeof envelopeBody.budget === "number" &&
-    envelopeBody.budget > 0
+    envelopeBody.budget >= 0
   ) {
     req.body = envelopeBody;
     next();
@@ -48,6 +51,40 @@ const validateEnvelopeBody = (req, res, next) => {
         example: {
           category: "string",
           budget: "number (greater than 0)",
+        },
+      },
+    });
+  }
+};
+
+const validateTransfer = (req, res, next) => {
+  const envelopeReqBody = req.body;
+  const envelopeKeys = Object.keys(envelopeReqBody);
+  const budgetIndex = envelopeKeys.indexOf("budget");
+  const firstEnvelopeId = +req.params.firstEnvelopeId;
+  const secondEnvelopeId = +req.params.secondEnvelopeId;
+  const firstEnvelope = envelopesDB.find((env) => env.ID === firstEnvelopeId);
+
+  if (
+    checkEnvelopeIfFound(firstEnvelopeId) &&
+    checkEnvelopeIfFound(secondEnvelopeId) &&
+    envelopeKeys.length === 1 &&
+    budgetIndex !== -1 &&
+    typeof envelopeReqBody.budget === "number" &&
+    envelopeReqBody.budget >= 0 &&
+    firstEnvelope.budget >= envelopeReqBody.budget
+  ) {
+    req.body = envelopeReqBody;
+    next();
+  } else {
+    res.status(400).json({
+      error: {
+        message: "Invalid Request Body",
+        details:
+          "Please provide only 'budget' fields in the request body. Make sure that the envelope you're transferring from has a budget in the range of the value you're transferring.",
+        example: {
+          budget:
+            "number (greater than 0 and less than the sender envelope's budget.)",
         },
       },
     });
@@ -96,5 +133,27 @@ envelopes.delete("/:envelopeId", (req, res, next) => {
 
   res.status(200).send(deletedEnvelope.envelopeObject());
 });
+
+envelopes.put(
+  "/transfer/:firstEnvelopeId&:secondEnvelopeId",
+  validateTransfer,
+  (req, res, next) => {
+    const budgetToBeAdded = req.body.budget;
+    const firstEnvelopeId = req.params.firstEnvelopeId;
+    const secondEnvelopeId = req.params.secondEnvelopeId;
+    const firstEnvelope = envelopesDB.find(
+      (env) => env.ID === +firstEnvelopeId
+    );
+    const secondEnvelope = envelopesDB.find(
+      (env) => env.ID === +secondEnvelopeId
+    );
+    firstEnvelope.budget -= +budgetToBeAdded;
+    secondEnvelope.budget += +budgetToBeAdded;
+    res.json({
+      sender: firstEnvelope.envelopeObject(),
+      receiver: secondEnvelope.envelopeObject(),
+    });
+  }
+);
 
 module.exports = envelopes;
