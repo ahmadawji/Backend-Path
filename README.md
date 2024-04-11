@@ -46,7 +46,10 @@ Once the server is running locally, you can use tools like Postman or curl to in
     `PUT /envelopes/:id` 
     
 -   Delete a budget envelope:
-    `DELETE /envelopes/:id`  
+    `DELETE /envelopes/:id`
+
+-   Transfer budget value from one envelope to another:
+    `PUT /envelopes/transfer/:firstEnvelopeId&:secondEnvelopeId` 
 
 ### Contributing
 
